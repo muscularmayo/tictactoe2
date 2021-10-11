@@ -1,0 +1,32 @@
+span {
+  border-style: solid;
+  border-width: 1px 1px;
+  border-color: black;
+  color: purple;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  font-size: 120%;
+  float: left;
+}
+
+.gameContainer {
+  display:grid;
+  grid-template-columns: repeat(auto-fit);
+  border: 2px solid red;
+
+
+  border-style: solid;
+  border-color: green;
+  border-width: 1px 1px;
+  width: 80px;
+  flex: 0 1 auto;
+}
+
+.row {
+  display: flex;
+  position: relative;
+  height: 38px;
+  width: 80px;
+  flex: auto;
+}
