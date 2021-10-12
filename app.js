@@ -16,7 +16,7 @@ const module = (function () {
   // lets make our click function here
   const clickHandler = function (e) {
     console.log(this,e);
-    let index = this.value;
+    let index = this.id;
     let piece;
     if(player1Turn) {
       piece = 'X'
@@ -25,14 +25,36 @@ const module = (function () {
     }
     if (state.gameBoard[index] === 0) {
       this.innerHTML = piece;
-    } else {
+      state.gameBoard[index] = piece;
+      player1Turn = !player1Turn;
+    } /*else {
       alert('this spot is already taken!')
-    }
-    player1Turn = !player1Turn;
+    }*/
     checkWin();
   }
 
-  const checkWin = function (e) {
+  const checkWin = function (index, size = 3) {
+    checkRows(index,size)
+    checkColumns(index,size)
+    checkDiagonals(index,size)
+  }
+
+  const checkRows = function (index, size) {
+    const rowIndex = (index-1)%size
+    for(let i=rowIndex; i < size-1; i++) {
+      if(state.gameBoard[i]!==state.gameBoard[i+1]) {
+        return false
+      };
+    }
+    return true;
+
+  }
+
+  const checkColumns = function (index,size) {
+
+  }
+
+  const checkDiagonals = function(index,size) {
 
   }
 
