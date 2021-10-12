@@ -118,8 +118,12 @@ const module = (function () {
     return true;
   }
 
-  const cells = document.querySelectorAll('.cell')
+  const resetState = function() {
 
+  }
+
+  const cells = document.querySelectorAll('.cell')
+  const resetButton = document.querySelector('#reset')
 
   const killBoard = function () {
     cells.forEach(cell => {
@@ -131,7 +135,16 @@ const module = (function () {
     cell.addEventListener('click', clickHandler)
   })
 
+  const reset = function () {
+    killBoard;
+    state.gameBoard = [0,0,0,0,1,0,0,0,0]
+    cells.forEach(cell => {
+      cell.innerHTML = ''
+      cell.addEventListener('click', clickHandler)
+    })
+  }
 
+  resetButton.addEventListener('click', reset)
 })()
 
 module.exports = module;
