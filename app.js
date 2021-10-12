@@ -7,12 +7,13 @@ const module = (function () {
   let player1Turn = true;
   let player1Score = 0;
   let player2Score = 0;
-
   const state = {
     gameBoard: [0,0,0,0,0,0,0,0,0],
     player1Turn: player1Turn
   }
   let size = Math.sqrt(state.gameBoard.length)
+  let diagonalIndexes = diagonalIndexes(size);
+
   // lets make our click function here
   const clickHandler = function (e) {
     console.log(this,e);
@@ -30,13 +31,21 @@ const module = (function () {
     } /*else {
       alert('this spot is already taken!')
     }*/
-    checkWin(index, size);
+    const winCheck = checkWin(index, size);
+    if(winCheck) {
+      alert('game over')
+
+    }
   }
 
   const checkWin = function (index, size) {
     const rows = checkRows(index,size)
     const columns = checkColumns(index,size)
     const diagonals = checkDiagonals(index,size)
+    if (rows || columns || diagonals) {
+      return true;
+    }
+    return false;
   }
 
   const checkRows = function (index, size) {
@@ -45,20 +54,45 @@ const module = (function () {
     for(i = position; i < position+size-1; i++) {
       if(state.gameBoard[i]!==state.gameBoard[i+1]) {
         return false
-      };
+      }
     }
     return true;
 
   }
 
   const checkColumns = function (index,size) {
-
+    let colIndex = index%size
+    for (let i = 0; i < size-1; i++) {
+      if(state.gameBoard[colIndex] !== state.gameBoard[colIndex+size]) {
+        return false;
+      }
+      colIndex = colIndex + size;
+    }
+    return true;
   }
 
   const checkDiagonals = function(index,size) {
-
+    //0 + size + 1
+    //(size-1) +(size-1)
   }
 
+  const diagonalIndexes = function(size) {
+    let diagonal1 = [];
+    let diagonal2 = [];
+    let leftIndex = 0;
+    let rightIndex = size-1;
+
+
+    for(let i = 0; i < size; i++) {
+      diagonal1.push(leftIndex)
+      diagonal2.push(rightIndex)
+      leftIndex = leftIndex + size + 1;
+      rightIndex = rightIndex + size - 1;
+    }
+
+
+    return { diagonal1, diagonal2}
+  }
 
   const cells = document.querySelectorAll('.cell')
   cells.forEach(cell => {
