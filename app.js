@@ -5,11 +5,11 @@
 //i'm going to need to make the cells clickable, and they'll either place x or o in the box depending on turn
 const module = (function () {
   let player1Turn = true;
-  let player1Score = 0;
-  let player2Score = 0;
   const state = {
-    gameBoard: [0,0,0,0,0,0,0,0,0],
-    player1Turn: player1Turn
+    gameBoard: [0,0,0,0,1,0,0,0,0],
+    player1Turn: player1Turn,
+    player1Score: 0,
+    player2Score: 0
   }
   let size = Math.sqrt(state.gameBoard.length)
 
@@ -43,7 +43,7 @@ const module = (function () {
     } else {
       piece = 'O'
     }
-    if (state.gameBoard[index] === 0) {
+    if (typeof state.gameBoard[index] === 'number') {
       this.innerHTML = piece;
       state.gameBoard[index] = piece;
       player1Turn = !player1Turn;
@@ -53,7 +53,7 @@ const module = (function () {
     const winCheck = checkWin(index, size);
     if(winCheck) {
       alert('game over')
-
+      killBoard();
     }
   }
 
@@ -94,27 +94,39 @@ const module = (function () {
   }
 
   const checkDiagonals = function(index,size) {
-
-    for(let i = 0; i < size-1; i++) {
-      if(diagonals.diagonal1.includes(index)) {
-        if(state.gameBoard[diagonals.diagonal1[i]] !== state.gameBoard[diagonals.diagonal1[i+1]]){
-          return false;
-        }
-      }
-      if(diagonals.diagonal2.includes(index)) {
-        if(state.gameBoard[diagonals.diagonal2[i]] !== state.gameBoard[diagonals.diagonal2[i+1]]) {
-          return false;
-        }
-      }
-
+    if(checkRightDiag(index,size) || checkLeftDiag(index,size)) {
+      return true;
     }
+    return false;
+  }
 
+  const checkLeftDiag = function(index,size) {
+    for(let i = 0; i < size-1; i++) {
+      if(state.gameBoard[diagonals.diagonal1[i]] !== state.gameBoard[diagonals.diagonal1[i+1]]){
+        return false;
+      }
+    }
     return true;
   }
 
-
+  const checkRightDiag = function(index, size) {
+    for(let i = 0; i < size-1; i++) {
+      if(state.gameBoard[diagonals.diagonal2[i]] !== state.gameBoard[diagonals.diagonal2[i+1]]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   const cells = document.querySelectorAll('.cell')
+
+
+  const killBoard = function () {
+    cells.forEach(cell => {
+      cell.removeEventListener('click', clickHandler)
+    })
+  }
+
   cells.forEach(cell => {
     cell.addEventListener('click', clickHandler)
   })
