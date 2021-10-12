@@ -12,7 +12,26 @@ const module = (function () {
     player1Turn: player1Turn
   }
   let size = Math.sqrt(state.gameBoard.length)
-  let diagonalIndexes = diagonalIndexes(size);
+
+  const diagonalIndexes = function(size) {
+    let diagonal1 = [];
+    let diagonal2 = [];
+    let leftIndex = 0;
+    let rightIndex = size-1;
+
+
+    for(let i = 0; i < size; i++) {
+      diagonal1.push(leftIndex)
+      diagonal2.push(rightIndex)
+      leftIndex = leftIndex + size + 1;
+      rightIndex = rightIndex + size - 1;
+    }
+
+
+    return { diagonal1, diagonal2 }
+  }
+
+  let diagonals = diagonalIndexes(size);
 
   // lets make our click function here
   const clickHandler = function (e) {
@@ -41,8 +60,11 @@ const module = (function () {
   const checkWin = function (index, size) {
     const rows = checkRows(index,size)
     const columns = checkColumns(index,size)
-    const diagonals = checkDiagonals(index,size)
-    if (rows || columns || diagonals) {
+    let diagonal = false;
+    if(diagonals.diagonal1.includes(index) || diagonals.diagonal2.includes(index)) {
+      diagonal = checkDiagonals(index,size)
+    }
+    if (rows || columns || diagonal) {
       return true;
     }
     return false;
@@ -72,27 +94,25 @@ const module = (function () {
   }
 
   const checkDiagonals = function(index,size) {
-    //0 + size + 1
-    //(size-1) +(size-1)
-  }
 
-  const diagonalIndexes = function(size) {
-    let diagonal1 = [];
-    let diagonal2 = [];
-    let leftIndex = 0;
-    let rightIndex = size-1;
+    for(let i = 0; i < size-1; i++) {
+      if(diagonals.diagonal1.includes(index)) {
+        if(state.gameBoard[diagonals.diagonal1[i]] !== state.gameBoard[diagonals.diagonal1[i+1]]){
+          return false;
+        }
+      }
+      if(diagonals.diagonal2.includes(index)) {
+        if(state.gameBoard[diagonals.diagonal2[i]] !== state.gameBoard[diagonals.diagonal2[i+1]]) {
+          return false;
+        }
+      }
 
-
-    for(let i = 0; i < size; i++) {
-      diagonal1.push(leftIndex)
-      diagonal2.push(rightIndex)
-      leftIndex = leftIndex + size + 1;
-      rightIndex = rightIndex + size - 1;
     }
 
-
-    return { diagonal1, diagonal2}
+    return true;
   }
+
+
 
   const cells = document.querySelectorAll('.cell')
   cells.forEach(cell => {
